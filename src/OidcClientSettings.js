@@ -24,6 +24,7 @@ export class OidcClientSettings {
         prompt, display, max_age, ui_locales, acr_values, resource,
         // behavior flags
         filterProtocolClaims = true, loadUserInfo = true,
+        awsCompat = false,
         staleStateAge = DefaultStaleStateAge, clockSkew = DefaultClockSkewInSeconds,
         // other behavior
         stateStore = new WebStorageStateStore(),
@@ -54,6 +55,7 @@ export class OidcClientSettings {
 
         this._filterProtocolClaims = !!filterProtocolClaims;
         this._loadUserInfo = !!loadUserInfo;
+        this._awsCompat = !!awsCompat;
         this._staleStateAge = staleStateAge;
         this._clockSkew = clockSkew;
 
@@ -166,6 +168,9 @@ export class OidcClientSettings {
     }
     get loadUserInfo() {
         return this._loadUserInfo;
+    }
+    get awsCompat() {
+        return this._awsCompat;
     }
     get staleStateAge() {
         return this._staleStateAge;

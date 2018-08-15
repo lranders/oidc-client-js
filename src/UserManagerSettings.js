@@ -26,6 +26,7 @@ export class UserManagerSettings extends OidcClientSettings {
         checkSessionInterval = DefaultCheckSessionInterval,
         stopCheckSessionOnError = true,
         revokeAccessTokenOnSignout = false,
+        awsCompat = false,
         accessTokenExpiringNotificationTime = DefaultAccessTokenExpiringNotificationTime,
         redirectNavigator = new RedirectNavigator(),
         popupNavigator = new PopupNavigator(),
@@ -49,6 +50,7 @@ export class UserManagerSettings extends OidcClientSettings {
         this._checkSessionInterval = checkSessionInterval;
         this._stopCheckSessionOnError = stopCheckSessionOnError;
         this._revokeAccessTokenOnSignout = revokeAccessTokenOnSignout;
+        this._awsCompat = awsCompat;
 
         this._redirectNavigator = redirectNavigator;
         this._popupNavigator = popupNavigator;
@@ -97,6 +99,9 @@ export class UserManagerSettings extends OidcClientSettings {
     }
     get revokeAccessTokenOnSignout() {
         return this._revokeAccessTokenOnSignout;
+    }
+    get awsCompat() {
+        return this._awsCompat;
     }
 
     get redirectNavigator() {

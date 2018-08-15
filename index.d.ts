@@ -134,6 +134,7 @@ export interface OidcClientSettings {
   readonly acr_values?: string;
   readonly filterProtocolClaims?: boolean;
   readonly loadUserInfo?: boolean;
+  readonly awsCompat?: boolean;
   readonly staleStateAge?: number;
   readonly clockSkew?: number;
   readonly stateStore?: StateStore;

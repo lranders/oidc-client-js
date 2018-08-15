@@ -104,14 +104,18 @@ export class ResponseValidator {
             return Promise.reject(new ErrorResponse(response));
         }
 
-        if (state.nonce && !response.id_token) {
-            Log.error("ResponseValidator._processSigninParams: Expecting id_token in response");
-            return Promise.reject(new Error("No id_token in response"));
-        }
+        if (!this._settings.awsCompat) {
+            // AWS does not currently support nonces, so we skip the checks for it
 
-        if (!state.nonce && response.id_token) {
-            Log.error("ResponseValidator._processSigninParams: Not expecting id_token in response");
-            return Promise.reject(new Error("Unexpected id_token in response"));
+            if (state.nonce && !response.id_token) {
+                Log.error("ResponseValidator._processSigninParams: Expecting id_token in response");
+                return Promise.reject(new Error("No id_token in response"));
+            }
+
+            if (!state.nonce && response.id_token) {
+                Log.error("ResponseValidator._processSigninParams: Not expecting id_token in response");
+                return Promise.reject(new Error("Unexpected id_token in response"));
+            }
         }
 
         return Promise.resolve(response);
@@ -220,9 +224,12 @@ export class ResponseValidator {
     }
 
     _validateIdToken(state, response) {
-        if (!state.nonce) {
-            Log.error("ResponseValidator._validateIdToken: No nonce on state");
-            return Promise.reject(new Error("No nonce on state"));
+        if (!this._settings.awsCompat) {
+            // AWS does not currently support nonces, so we skip the checks for it
+            if (!state.nonce) {
+                Log.error("ResponseValidator._validateIdToken: No nonce on state");
+                return Promise.reject(new Error("No nonce on state"));
+            }
         }
 
         let jwt = this._joseUtil.parseJwt(response.id_token);
@@ -231,9 +238,12 @@ export class ResponseValidator {
             return Promise.reject(new Error("Failed to parse id_token"));
         }
 
-        if (state.nonce !== jwt.payload.nonce) {
-            Log.error("ResponseValidator._validateIdToken: Invalid nonce in id_token");
-            return Promise.reject(new Error("Invalid nonce in id_token"));
+        if (!this._settings.awsCompat) {
+            // AWS does not currently support nonces, so we skip the checks for it
+            if (state.nonce !== jwt.payload.nonce) {
+                Log.error("ResponseValidator._validateIdToken: Invalid nonce in id_token");
+                return Promise.reject(new Error("Invalid nonce in id_token"));
+            }
         }
 
         var kid = jwt.header.kid;
